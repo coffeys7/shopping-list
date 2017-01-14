@@ -109,6 +109,11 @@ struct SCGraph {
         let done = listItem["done"] as! Bool
         return ListItem(label: label!, subLabel: subLabel!, annotation: annotation!, done: done)
     }
+    
+    static func update() {
+        let graph = Graph()
+        graph.sync()
+    }
 }
 
 struct List {

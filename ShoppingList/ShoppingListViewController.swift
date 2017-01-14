@@ -158,6 +158,8 @@ extension ShoppingListViewController: UITableViewDelegate {
         let itemEntity: Entity = dataSourceItems[(indexPath as NSIndexPath).row]
         let itemInfo = SCGraph.getListItemInfo(listItem: itemEntity)
         
+        print("Label: \(itemInfo.label), SubLabel: \(itemInfo.subLabel), Annotation: \(itemInfo.annotation), done: \(itemInfo.done)")
+        
         // create new alert from AddItemAlertView template
         let alert = AddItemAlertView()
         
@@ -184,6 +186,7 @@ extension ShoppingListViewController: UITableViewDelegate {
             itemEntity["label"] = labelField.text!
             itemEntity["subLabel"] = subLabelField.text!
             itemEntity["annotation"] = annotationField.text!
+            SCGraph.update()
             tableView.reloadData()
             tableView.reloadInputViews()
         }
@@ -221,10 +224,12 @@ extension ShoppingListViewController: UITableViewDelegate {
             //let cell = tableView.cellForRow(at: indexPath)
             if item["done"] as! Bool {
                 item["done"] = false
+                SCGraph.update()
                 self.tableView.reloadData()
                 self.tableView.reloadInputViews()
             } else {
                 item["done"] = true
+                SCGraph.update()
                 self.tableView.reloadData()
                 self.tableView.reloadInputViews()
             }
