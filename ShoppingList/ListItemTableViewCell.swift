@@ -13,19 +13,19 @@ import Material
 import Spring
 import FontAwesome_swift
 import ChameleonFramework
-
+import Graph
 
 class ListItemTableViewCell: TableViewCell {
     
     var listTitleLabel: UILabel!
     var listDateLabel: UILabel!
-    var item: ListItem!
+    var item: Entity!
     var index: Int!
     
     /*
      name: init
      */
-    init(style: UITableViewCellStyle, reuseIdentifier: String!, item: ListItem, index: Int) {
+    init(style: UITableViewCellStyle, reuseIdentifier: String!, item: Entity, index: Int) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.item = item
@@ -55,7 +55,7 @@ class ListItemTableViewCell: TableViewCell {
         listTitleLabel.textColor = FlatWhite()
         listTitleLabel.textAlignment = .left
         listTitleLabel.font = RobotoFont.medium(with: 14)
-        listTitleLabel.text = self.item.title
+        listTitleLabel.text = self.item["title"] as? String
         
         // layout
         layout(listTitleLabel).left(30).centerVertically()
@@ -71,7 +71,7 @@ class ListItemTableViewCell: TableViewCell {
         listDateLabel.textColor = FlatWhite().withAlphaComponent(0.7)
         listDateLabel.textAlignment = .right
         listDateLabel.font = RobotoFont.light(with: 12)
-        listDateLabel.text = self.item.dateString()
+        listDateLabel.text = dateString(date: self.item["date"] as! Date)
         
         // layout
         layout(listDateLabel).right(30).centerVertically()

@@ -15,7 +15,7 @@ class ShoppingListViewController: UIViewController {
     
     let tableViewHeight: CGFloat = 80.0
     fileprivate var tableView: UITableView!
-    fileprivate var dataSourceItems: Array<ShoppingItem>!
+    fileprivate var dataSourceItems: Array<Entity>!
     fileprivate var toolbar: Toolbar!
     
     var list: Entity!
@@ -31,17 +31,7 @@ class ShoppingListViewController: UIViewController {
     }
     
     fileprivate func prepareDataSourceItemsWith(list: Entity) {
-        dataSourceItems = Array<ShoppingItem>()
-        let items = list.relationship(types: "Item").object(types: "ShoppingItem")
-        for item in items {
-            let label = item["label"] as! String
-            let annotation = item["annotation"] as! String
-            let subLabel = item["subLabel"] as! String
-            let done = item["done"] as! Bool
-            let newItem = ShoppingItem(label: label, subLabel: subLabel, annotation: annotation, done: done)
-            newItem.itemEntity = item
-            dataSourceItems.append(newItem)
-        }
+        dataSourceItems = SCGraph.loadItemsInList(list: self.list)
     }
 
     override func viewDidLoad() {
@@ -71,7 +61,7 @@ class ShoppingListViewController: UIViewController {
         view.layout(toolbar).top(20).left(0).right(0)
         
         // title label
-        toolbar.title = list["title"] as! String
+        toolbar.title = list["title"] as? String
         toolbar.titleLabel.textColor = FlatWhite()
         
         // left (menu) button
@@ -112,26 +102,18 @@ class ShoppingListViewController: UIViewController {
         
         // add button with callback
         let btn = alert.addButton("Add Item") {
-            let label = labelField.text!
-            let subLabel = subLabelField.text!
-            let annotationLabel = annotationField.text!
-            self.addNewItem(label: label, subLabel: subLabel, annotation: annotationLabel)
+            let newItem = Entity(type: "ListItem")
+            newItem["label"] = labelField.text!
+            newItem["subLabel"] = subLabelField.text!
+            newItem["annotation"] = annotationField.text!
+            newItem["done"] = false
+            SCGraph.addItemToList(list: self.list, item: newItem)
+            self.dataSourceItems.append(newItem)
+            self.tableView.reloadData()
+            self.tableView.reloadInputViews()
         }
         btn.backgroundColor = FlatGreen()
         alert.showEdit("Add new item", subTitle: "Enter a label and quantity for the new item", colorStyle: 0x22B573, animationStyle: .leftToRight)
-    }
-    
-    fileprivate func addNewItem(label: String, subLabel: String, annotation: String) {
-        let newItem = SCGraph.addItemToList(list: list, label: label, subLabel: subLabel, annotation: annotation, done: false)
-        updateData(label: label, subLabel: subLabel, annotation: annotation, item: newItem)
-    }
-    
-    fileprivate func updateData(label: String, subLabel: String, annotation: String, item: Entity) {
-        let newItem = ShoppingItem(label: label, subLabel: subLabel, annotation: annotation, done: false)
-        newItem.itemEntity = item
-        dataSourceItems.append(newItem)
-        tableView.reloadData()
-        tableView.reloadInputViews()
     }
     
     @objc
@@ -173,8 +155,10 @@ extension ShoppingListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         // currently selected nav item
-        let item: ShoppingItem = dataSourceItems[(indexPath as NSIndexPath).row]
-        let entity = item.itemEntity
+        let itemEntity: Entity = dataSourceItems[(indexPath as NSIndexPath).row]
+        let itemInfo = SCGraph.getListItemInfo(listItem: itemEntity)
+        
+        print("Label: \(itemInfo.label), SubLabel: \(itemInfo.subLabel), Annotation: \(itemInfo.annotation), done: \(itemInfo.done)")
         
         // create new alert from AddItemAlertView template
         let alert = AddItemAlertView()
@@ -183,31 +167,26 @@ extension ShoppingListViewController: UITableViewDelegate {
         let labelField = alert.addTextField("Item label")
         labelField.autocapitalizationType = .none
         labelField.autocorrectionType = .no
-        labelField.text = item.label
+        labelField.text = itemInfo.label
         
         // add field for sub label
         let subLabelField = alert.addTextField("Sub label")
         subLabelField.autocapitalizationType = .none
         subLabelField.autocorrectionType = .no
-        subLabelField.text = item.subLabel
+        subLabelField.text = itemInfo.subLabel
         
         // add field for annotation
         let annotationField = alert.addTextField("Annotation")
         annotationField.autocapitalizationType = .none
         annotationField.autocorrectionType = .no
-        annotationField.text = item.annotation
+        annotationField.text = itemInfo.annotation
         
         // add button with callback
         let btn = alert.addButton("Update") {
-            let label = labelField.text!
-            let subLabel = subLabelField.text!
-            let annotationLabel = annotationField.text!
-            entity?["label"] = label
-            entity?["subLabel"] = subLabel
-            entity?["annotation"] = annotationLabel
-            item.label = label
-            item.subLabel = subLabel
-            item.annotation = annotationLabel
+            itemEntity["label"] = labelField.text!
+            itemEntity["subLabel"] = subLabelField.text!
+            itemEntity["annotation"] = annotationField.text!
+            SCGraph.update()
             tableView.reloadData()
             tableView.reloadInputViews()
         }
@@ -232,8 +211,8 @@ extension ShoppingListViewController: UITableViewDelegate {
         // delete action
         let delete = UITableViewRowAction(style: .normal, title: "Delete") { (action, index) in
             let item = self.dataSourceItems[index.row]
-            SCGraph.removeItem(item: item.itemEntity)
             self.dataSourceItems.remove(at: index.row)
+            SCGraph.removeItem(item: item)
             self.tableView.reloadData()
             self.tableView.reloadInputViews()
         }
@@ -242,17 +221,15 @@ extension ShoppingListViewController: UITableViewDelegate {
         // done action
         let doneAction = UITableViewRowAction(style: .normal, title: "Done") { (action, index) in
             let item = self.dataSourceItems[index.row]
-            let entity = item.itemEntity
-            let done  = item.done
             //let cell = tableView.cellForRow(at: indexPath)
-            if done {
-                item.done = false
-                entity?["done"] = false
+            if item["done"] as! Bool {
+                item["done"] = false
+                SCGraph.update()
                 self.tableView.reloadData()
                 self.tableView.reloadInputViews()
             } else {
-                item.done = true
-                entity?["done"] = true
+                item["done"] = true
+                SCGraph.update()
                 self.tableView.reloadData()
                 self.tableView.reloadInputViews()
             }

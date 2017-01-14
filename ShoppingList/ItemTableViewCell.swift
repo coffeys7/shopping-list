@@ -13,26 +13,26 @@ import Material
 import Spring
 import FontAwesome_swift
 import ChameleonFramework
-
+import Graph
 
 class ItemTableViewCell: TableViewCell {
     
     var itemLabel: UILabel!
     var quantLabel: UILabel!
     var subLabel: UILabel!
-    var item: ShoppingItem!
+    var item: Entity!
     var index: Int!
     
     /*
      name: init
      */
-    init(style: UITableViewCellStyle, reuseIdentifier: String!, item: ShoppingItem, index: Int) {
+    init(style: UITableViewCellStyle, reuseIdentifier: String!, item: Entity, index: Int) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.item = item
         self.index = index
         self.contentView.clipsToBounds = true
-        if item.done {
+        if item["done"] as! Bool {
             self.backgroundColor = FlatGray().withAlphaComponent(0.75)
         } else {
             self.backgroundColor = UIColor.clear
@@ -60,7 +60,7 @@ class ItemTableViewCell: TableViewCell {
         itemLabel.textColor = FlatWhite()
         itemLabel.textAlignment = .left
         itemLabel.font = RobotoFont.medium(with: 14)
-        itemLabel.text = self.item.label
+        itemLabel.text = self.item["label"] as? String
         
         // layout
         layout(itemLabel).left(30).top(21)
@@ -76,7 +76,7 @@ class ItemTableViewCell: TableViewCell {
         subLabel.textColor = FlatWhite()
         subLabel.textAlignment = .left
         subLabel.font = RobotoFont.light(with: 12)
-        subLabel.text = self.item.subLabel
+        subLabel.text = self.item["subLabel"] as? String
         
         // layout
         layout(subLabel).left(30).bottom(22)
@@ -92,7 +92,7 @@ class ItemTableViewCell: TableViewCell {
         quantLabel.textColor = FlatWhite().withAlphaComponent(0.7)
         quantLabel.textAlignment = .right
         quantLabel.font = RobotoFont.thin(with: 12)
-        quantLabel.text = self.item.annotation
+        quantLabel.text = self.item["annotation"] as? String
         
         // layout
         layout(quantLabel).right(30).centerVertically()

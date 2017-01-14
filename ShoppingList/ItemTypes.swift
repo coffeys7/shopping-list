@@ -8,7 +8,7 @@
 
 import Foundation
 import Graph
-
+/*
 class ListItem {
     var title: String!
     var date: Date!
@@ -48,6 +48,7 @@ class ShoppingItem: NSObject {
         self.done = done
     }
 }
+ */
 
 
 
