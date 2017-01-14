@@ -1,0 +1,52 @@
+PODS:
+  - ChameleonFramework/Default (2.1.0)
+  - ChameleonFramework/Swift (2.1.0):
+    - ChameleonFramework/Default
+  - FontAwesome.swift (1.0.0)
+  - Graph (2.1.0)
+  - Material (2.4.1):
+    - Material/Core (= 2.4.1)
+  - Material/Core (2.4.1)
+  - NVActivityIndicatorView (3.1)
+  - SCLAlertView (0.7.0)
+  - Spring (1.0.3)
+  - SwiftyUserDefaults (3.0.0)
+
+DEPENDENCIES:
+  - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
+  - FontAwesome.swift
+  - Graph (~> 2.0)
+  - Material (~> 2.0)
+  - NVActivityIndicatorView
+  - SCLAlertView
+  - Spring (from `https://github.com/MengTo/Spring.git`, branch `swift3`)
+  - SwiftyUserDefaults
+
+EXTERNAL SOURCES:
+  ChameleonFramework:
+    :git: https://github.com/ViccAlexander/Chameleon.git
+  Spring:
+    :branch: swift3
+    :git: https://github.com/MengTo/Spring.git
+
+CHECKOUT OPTIONS:
+  ChameleonFramework:
+    :commit: dcf98f9bf3a632a7f40679b7da46f09681e48526
+    :git: https://github.com/ViccAlexander/Chameleon.git
+  Spring:
+    :commit: 3a9227c6e9157e7b47f5ac1ee5abab2a56b50002
+    :git: https://github.com/MengTo/Spring.git
+
+SPEC CHECKSUMS:
+  ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
+  FontAwesome.swift: 2d32a3d62195343c2004b7c9043294ed2948553a
+  Graph: 2d1b00516566c8a1d3d304b852288c7e68a13c01
+  Material: bdf4386e3600537077c2667764292f8dd581e541
+  NVActivityIndicatorView: 9f47e8a4affb860ef729aeec99b1550219e6c233
+  SCLAlertView: 8a14ffc40590c619e183eed2298b854385f30be1
+  Spring: 3f02b5dc3308572ef177b3cad0fa7bbc4b0706f7
+  SwiftyUserDefaults: 0f1d45fc3aafb9064dac661e367f8f83fe21a4b4
+
+PODFILE CHECKSUM: 6bf2149a0648cff1447a8ee359590449e8b8c264
+
+COCOAPODS: 1.0.1
