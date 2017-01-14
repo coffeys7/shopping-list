@@ -56,23 +56,17 @@ struct SCGraph {
  
     static func addList(title: String, date: Date) -> Entity {
         let graph = Graph()
-        let newList = Entity(type: "ListItem")
+        let newList = Entity(type: "List")
         newList["title"] = title
         newList["date"] = date
         graph.sync()
         return newList
     }
     
-    static func addItemToList(list: Entity, label: String, subLabel: String, annotation: String, done: Bool) -> Entity {
+    static func addItemToList(list: Entity, item: Entity) {
         let graph = Graph()
-        let newItem = Entity(type: "ShoppingItem")
-        newItem["label"] = label
-        newItem["annotation"] = annotation
-        newItem["subLabel"] = subLabel
-        newItem["done"] = done
-        newItem.is(relationship: "Item").in(object: list)
+        item.is(relationship: "Items").in(object: list)
         graph.sync()
-        return newItem
     }
     
     static func removeItem(item: Entity) {
@@ -83,13 +77,58 @@ struct SCGraph {
     
     static func removeList(list: Entity) {
         let graph = Graph()
-        let items = list.relationship(types: "Item").object(types: "ShoppingItem")
+        let items = list.relationship(types: "Items").object(types: "ListItem")
         for item in items {
             item.delete()
         }
         list.delete()
         graph.sync()
     }
+    
+    static func loadLists() -> [Entity] {
+        let graph = Graph()
+        let search = Search<Entity>(graph: graph).for(types: "List")
+        return search.sync()
+    }
+    
+    static func loadItemsInList(list: Entity) -> [Entity] {
+        let items = list.relationship(types: "Items").object(types: "ListItem")
+        return items
+    }
+    
+    static func getListInfo(list: Entity) -> List {
+        let title = list["title"] as? String
+        let date = dateString(date: list["date"] as! Date)
+        return List(title: title!, date: date)
+    }
+    
+    static func getListItemInfo(listItem: Entity) -> ListItem {
+        let label = listItem["label"] as? String
+        let subLabel = listItem["subLabel"] as? String
+        let annotation = listItem["annotation"] as? String
+        let done = listItem["done"] as! Bool
+        return ListItem(label: label!, subLabel: subLabel!, annotation: annotation!, done: done)
+    }
+}
+
+struct List {
+    var title: String
+    var date: String
+}
+
+struct ListItem {
+    var label: String
+    var subLabel: String
+    var annotation: String
+    var done: Bool
+}
+
+func dateString(date: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .short
+    dateFormatter.timeStyle = .short
+    let dateString = dateFormatter.string(from: date)
+    return dateString
 }
 
 struct SampleData {

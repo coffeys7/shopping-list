@@ -20,7 +20,7 @@ class ListsViewController: UIViewController {
     let tableViewHeight: CGFloat = 80.0
     fileprivate var tableView: UITableView!
     fileprivate var toolbar: Toolbar!
-    fileprivate var dataSourceItems: Array<ListItem>!
+    fileprivate var dataSourceItems: Array<Entity>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,13 +84,11 @@ class ListsViewController: UIViewController {
     fileprivate func addNewList(label: String) {
         let dateNow = Date()
         let newList = SCGraph.addList(title: label, date: dateNow)
-        self.updateData(title: label, date: dateNow, entity: newList)
+        self.updateData(entity: newList)
     }
     
-    fileprivate func updateData(title: String, date: Date, entity: Entity) {
-        let newItem = ListItem(title: title, date: date)
-        newItem.listEntity = entity
-        self.dataSourceItems.append(newItem)
+    fileprivate func updateData(entity: Entity) {
+        self.dataSourceItems.append(entity)
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
     }
@@ -103,19 +101,7 @@ class ListsViewController: UIViewController {
 extension ListsViewController {
     
     fileprivate func prepareCells() {
-        dataSourceItems = Array<ListItem>()
-        let graph = Graph()
-        let search = Search<Entity>(graph: graph).for(types: "ListItem")
-        let lists = search.sync()
-        for list in lists {
-            if let title = list["title"] as? String {
-                if let date = list["date"] as? Date {
-                    let newItem = ListItem(title: title, date: date)
-                    newItem.listEntity = list
-                    dataSourceItems.append(newItem)
-                }
-            }
-        }
+        dataSourceItems = SCGraph.loadLists()
     }
     
     fileprivate func prepareTableView() {
@@ -144,9 +130,10 @@ extension ListsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         // currently selected nav item
-        let item: ListItem = dataSourceItems[(indexPath as NSIndexPath).row]
-        print("Item: \(item.title!), Date: \(item.dateString())")
-        self.present(ShoppingListViewController(list: item.listEntity), animated: true, completion: nil)
+        let list: Entity = dataSourceItems[(indexPath as NSIndexPath).row]
+        let listInfo = SCGraph.getListInfo(list: list)
+        print("Item: \(listInfo.title), Date: \(listInfo.date))")
+        self.present(ShoppingListViewController(list: list), animated: true, completion: nil)
     }
     
     /*
@@ -162,9 +149,9 @@ extension ListsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .normal, title: "Delete") { (action, index) in
-            let item = self.dataSourceItems[index.row]
-            SCGraph.removeList(list: item.listEntity)
+            let list = self.dataSourceItems[index.row]
             self.dataSourceItems.remove(at: index.row)
+            SCGraph.removeList(list: list)
             self.tableView.reloadData()
             self.tableView.reloadInputViews()
         }
@@ -196,8 +183,8 @@ extension ListsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // initialize the current cell and its nav item data source
-        let item = dataSourceItems[indexPath.row]
-        let cell = ListItemTableViewCell(style: .default, reuseIdentifier: "ListItemTableViewCell", item: item, index: indexPath.row)
+        let list = dataSourceItems[indexPath.row]
+        let cell = ListItemTableViewCell(style: .default, reuseIdentifier: "ListItemTableViewCell", item: list, index: indexPath.row)
         return cell
     }
     
