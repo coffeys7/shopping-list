@@ -1,7 +1,7 @@
 # Simple List  
   
 ## Updating list items:  
-'''swift
+```swift
 // updating a list item
 listEntity["label"] = newLabel
 listEntity["subLabel"] = newSubLabel
@@ -13,4 +13,4 @@ SCGraph.update()
 
 // update/animate the change in the table view
 self.animateUpdates()
-'''
+```
