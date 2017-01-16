@@ -15,10 +15,11 @@ import FontAwesome_swift
 import ChameleonFramework
 import Graph
 
+
 class ItemTableViewCell: TableViewCell {
     
     var itemLabel: UILabel!
-    var quantLabel: UILabel!
+    var annotationLabel: UILabel!
     var subLabel: UILabel!
     var item: Entity!
     var index: Int!
@@ -32,22 +33,29 @@ class ItemTableViewCell: TableViewCell {
         self.item = item
         self.index = index
         self.contentView.clipsToBounds = true
-        if item["done"] as! Bool {
-            self.backgroundColor = FlatGray().withAlphaComponent(0.75)
-        } else {
-            self.backgroundColor = UIColor.clear
-        }
         self.pulseAnimation = .none
         self.prepareItemLabel()
         self.prepareSubLabel()
         self.prepareAnnotationLabel()
+        setDone(done: item["done"] as! Bool)
     }
-    
+        
     /*
      required: init
      */
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    /*
+        name: setDone
+    */
+    fileprivate func setDone(done: Bool) {
+        let colorScheme = done ? CellColorScheme.done() : CellColorScheme.notDone()
+        backgroundColor = colorScheme.background
+        itemLabel.textColor = colorScheme.text
+        annotationLabel.textColor = colorScheme.text
+        subLabel.textColor = colorScheme.text
     }
     
     /*
@@ -88,14 +96,14 @@ class ItemTableViewCell: TableViewCell {
     fileprivate func prepareAnnotationLabel() {
         
         // normal text properties
-        quantLabel = UILabel()
-        quantLabel.textColor = FlatWhite().withAlphaComponent(0.7)
-        quantLabel.textAlignment = .right
-        quantLabel.font = RobotoFont.thin(with: 12)
-        quantLabel.text = self.item["annotation"] as? String
+        annotationLabel = UILabel()
+        annotationLabel.textColor = FlatWhite().withAlphaComponent(0.7)
+        annotationLabel.textAlignment = .right
+        annotationLabel.font = RobotoFont.thin(with: 12)
+        annotationLabel.text = self.item["annotation"] as? String
         
         // layout
-        layout(quantLabel).right(30).centerVertically()
+        layout(annotationLabel).right(30).centerVertically()
     }
     
 }

@@ -10,6 +10,7 @@ import Foundation
 import Graph
 import SCLAlertView
 import Material
+import ChameleonFramework
 
 public enum SCInterval {
     case minute
@@ -113,6 +114,20 @@ struct SCGraph {
     static func update() {
         let graph = Graph()
         graph.sync()
+    }
+}
+
+struct ColorScheme {
+    var text: UIColor
+    var background: UIColor
+}
+
+struct CellColorScheme {
+    static func done() -> ColorScheme {
+        return ColorScheme(text: FlatWhite().withAlphaComponent(0.5), background: FlatBlack().withAlphaComponent(0.3))
+    }
+    static func notDone() -> ColorScheme {
+        return ColorScheme(text: FlatWhite().withAlphaComponent(1.0), background: UIColor.clear)
     }
 }
 

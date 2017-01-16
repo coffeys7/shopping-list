@@ -32,6 +32,7 @@ class ShoppingListViewController: UIViewController {
     
     fileprivate func prepareDataSourceItemsWith(list: Entity) {
         dataSourceItems = SCGraph.loadItemsInList(list: self.list)
+        filterListByDone(animate: false)
     }
 
     override func viewDidLoad() {
@@ -100,7 +101,7 @@ class ShoppingListViewController: UIViewController {
         annotationField.autocapitalizationType = .none
         annotationField.autocorrectionType = .no
         
-        // add button with callback
+        // add (add) button with callback
         let btn = alert.addButton("Add Item") {
             let newItem = Entity(type: "ListItem")
             newItem["label"] = labelField.text!
@@ -109,16 +110,38 @@ class ShoppingListViewController: UIViewController {
             newItem["done"] = false
             SCGraph.addItemToList(list: self.list, item: newItem)
             self.dataSourceItems.append(newItem)
-            self.tableView.reloadData()
-            self.tableView.reloadInputViews()
+            self.filterListByDone(animate: true)
         }
         btn.backgroundColor = FlatGreen()
+        
+        // add (cancel) button with callback
+        _ = alert.addButton("Cancel", backgroundColor: FlatGray()) {
+            alert.hideView()
+        }
+        
         alert.showEdit("Add new item", subTitle: "Enter a label and quantity for the new item", colorStyle: 0x22B573, animationStyle: .leftToRight)
     }
     
     @objc
     fileprivate func handleMenuButton() {
         self.present(ListsViewController(), animated: true, completion: nil)
+    }
+    
+    fileprivate func animateUpdates() {
+        UIView.transition(with: tableView, duration: 0.4, options: .transitionCrossDissolve, animations: {
+            self.tableView.reloadData()
+            self.tableView.reloadInputViews()
+        }, completion: nil)
+
+    }
+    
+    fileprivate func filterListByDone(animate: Bool) {
+        dataSourceItems.sort { (e1, e2) -> Bool in
+            (e2["done"] as! Bool) && !(e1["done"] as! Bool)
+        }
+        if animate {
+            animateUpdates()
+        }
     }
 
 }
@@ -187,10 +210,14 @@ extension ShoppingListViewController: UITableViewDelegate {
             itemEntity["subLabel"] = subLabelField.text!
             itemEntity["annotation"] = annotationField.text!
             SCGraph.update()
-            tableView.reloadData()
-            tableView.reloadInputViews()
+            self.animateUpdates()
         }
         btn.backgroundColor = FlatGreen()
+        
+        // add (cancel) button with callback
+        _ = alert.addButton("Cancel", backgroundColor: FlatGray()) {
+            alert.hideView()
+        }
         alert.showEdit("Update Item", subTitle: "Update attributes below for this item", colorStyle: 0x22B573, animationStyle: .leftToRight)
         
     }
@@ -213,8 +240,7 @@ extension ShoppingListViewController: UITableViewDelegate {
             let item = self.dataSourceItems[index.row]
             self.dataSourceItems.remove(at: index.row)
             SCGraph.removeItem(item: item)
-            self.tableView.reloadData()
-            self.tableView.reloadInputViews()
+            self.animateUpdates()
         }
         delete.backgroundColor = FlatRed()
         
@@ -225,13 +251,11 @@ extension ShoppingListViewController: UITableViewDelegate {
             if item["done"] as! Bool {
                 item["done"] = false
                 SCGraph.update()
-                self.tableView.reloadData()
-                self.tableView.reloadInputViews()
+                self.filterListByDone(animate: true)
             } else {
                 item["done"] = true
                 SCGraph.update()
-                self.tableView.reloadData()
-                self.tableView.reloadInputViews()
+                self.filterListByDone(animate: true)
             }
         }
         doneAction.backgroundColor = FlatGreen()

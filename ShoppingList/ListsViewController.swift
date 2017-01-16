@@ -50,7 +50,7 @@ class ListsViewController: UIViewController {
         view.layout(toolbar).top(20).left(0).right(0)
         
         // title label
-        toolbar.title = "Grocery Lists"
+        toolbar.title = "My Lists"
         toolbar.titleLabel.textColor = FlatWhite()
         
         // right menu button
@@ -78,6 +78,11 @@ class ListsViewController: UIViewController {
             
         }
         btn.backgroundColor = FlatGreen()
+        
+        // add (cancel) button with callback
+        _ = alert.addButton("Cancel", backgroundColor: FlatGray()) {
+            alert.hideView()
+        }
         alert.showEdit("Add a new list", subTitle: "Enter a title below for the new list", colorStyle: 0x22B573, animationStyle: .leftToRight)
     }
     
@@ -89,8 +94,16 @@ class ListsViewController: UIViewController {
     
     fileprivate func updateData(entity: Entity) {
         self.dataSourceItems.append(entity)
-        self.tableView.reloadData()
-        self.tableView.reloadInputViews()
+        self.filterListByDate(animate: true)
+    }
+    
+    fileprivate func filterListByDate(animate: Bool) {
+        dataSourceItems.sort { (e1, e2) -> Bool in
+            (e1["date"] as! Date) > (e2["date"] as! Date)
+        }
+        if animate {
+            animateUpdates()
+        }
     }
     
 }
@@ -102,6 +115,7 @@ extension ListsViewController {
     
     fileprivate func prepareCells() {
         dataSourceItems = SCGraph.loadLists()
+        filterListByDate(animate: false)
     }
     
     fileprivate func prepareTableView() {
@@ -117,6 +131,14 @@ extension ListsViewController {
         
         // layout the table view
         view.layout(tableView).edges(top: 90, left: 10, bottom: 10, right: 10)
+        
+    }
+    
+    fileprivate func animateUpdates() {
+        UIView.transition(with: tableView, duration: 0.4, options: .transitionCrossDissolve, animations: {
+            self.tableView.reloadData()
+            self.tableView.reloadInputViews()
+        }, completion: nil)
         
     }
     
@@ -152,8 +174,7 @@ extension ListsViewController: UITableViewDelegate {
             let list = self.dataSourceItems[index.row]
             self.dataSourceItems.remove(at: index.row)
             SCGraph.removeList(list: list)
-            self.tableView.reloadData()
-            self.tableView.reloadInputViews()
+            self.filterListByDate(animate: true)
         }
         delete.backgroundColor = FlatRed()
         return [delete]
