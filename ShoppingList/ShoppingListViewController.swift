@@ -99,52 +99,55 @@ class ShoppingListViewController: UIViewController, UIGestureRecognizerDelegate 
     @objc
     fileprivate func handleLongPress() {
         if longPressGesture.state == UIGestureRecognizerState.began {
-            
-            // provide feedback that we are entering update mode
-            feedbackGenerator?.notificationOccurred(.success)
-            
-            // currently selected nav item
-            let itemEntity: Entity = dataSourceItems[selectedRow]
-            let itemInfo = SCGraph.getListItemInfo(listItem: itemEntity)
-            
-            print("Label: \(itemInfo.label), SubLabel: \(itemInfo.subLabel), Annotation: \(itemInfo.annotation), done: \(itemInfo.done)")
-            
-            // create new alert from AddItemAlertView template
-            let alert = AddItemAlertView()
-            
-            // add field for label
-            let labelField = alert.addTextField("Item label")
-            labelField.autocapitalizationType = .none
-            labelField.autocorrectionType = .no
-            labelField.text = itemInfo.label
-            
-            // add field for sub label
-            let subLabelField = alert.addTextField("Sub label")
-            subLabelField.autocapitalizationType = .none
-            subLabelField.autocorrectionType = .no
-            subLabelField.text = itemInfo.subLabel
-            
-            // add field for annotation
-            let annotationField = alert.addTextField("Annotation")
-            annotationField.autocapitalizationType = .none
-            annotationField.autocorrectionType = .no
-            annotationField.text = itemInfo.annotation
-            
-            // add button with callback
-            let btn = alert.addButton("Update") {
-                itemEntity["label"] = labelField.text!
-                itemEntity["subLabel"] = subLabelField.text!
-                itemEntity["annotation"] = annotationField.text!
-                SCGraph.update()
-                self.animateUpdates()
+            let touchPoint = longPressGesture.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: touchPoint) {
+                
+                // provide feedback that we are entering update mode
+                feedbackGenerator?.notificationOccurred(.success)
+                
+                // currently selected nav item
+                let itemEntity: Entity = dataSourceItems[indexPath.row]
+                let itemInfo = SCGraph.getListItemInfo(listItem: itemEntity)
+                
+                print("Label: \(itemInfo.label), SubLabel: \(itemInfo.subLabel), Annotation: \(itemInfo.annotation), done: \(itemInfo.done)")
+                
+                // create new alert from AddItemAlertView template
+                let alert = AddItemAlertView()
+                
+                // add field for label
+                let labelField = alert.addTextField("Item label")
+                labelField.autocapitalizationType = .none
+                labelField.autocorrectionType = .no
+                labelField.text = itemInfo.label
+                
+                // add field for sub label
+                let subLabelField = alert.addTextField("Sub label")
+                subLabelField.autocapitalizationType = .none
+                subLabelField.autocorrectionType = .no
+                subLabelField.text = itemInfo.subLabel
+                
+                // add field for annotation
+                let annotationField = alert.addTextField("Annotation")
+                annotationField.autocapitalizationType = .none
+                annotationField.autocorrectionType = .no
+                annotationField.text = itemInfo.annotation
+                
+                // add button with callback
+                let btn = alert.addButton("Update") {
+                    itemEntity["label"] = labelField.text!
+                    itemEntity["subLabel"] = subLabelField.text!
+                    itemEntity["annotation"] = annotationField.text!
+                    SCGraph.update()
+                    self.animateUpdates()
+                }
+                btn.backgroundColor = FlatGreen()
+                
+                // add (cancel) button with callback
+                _ = alert.addButton("Cancel", backgroundColor: FlatGray()) {
+                    alert.hideView()
+                }
+                alert.showEdit("Update Item", subTitle: "Update attributes below for this item", colorStyle: 0x22B573, animationStyle: .leftToRight)
             }
-            btn.backgroundColor = FlatGreen()
-            
-            // add (cancel) button with callback
-            _ = alert.addButton("Cancel", backgroundColor: FlatGray()) {
-                alert.hideView()
-            }
-            alert.showEdit("Update Item", subTitle: "Update attributes below for this item", colorStyle: 0x22B573, animationStyle: .leftToRight)
         }
     }
         

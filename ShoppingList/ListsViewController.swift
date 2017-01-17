@@ -58,16 +58,18 @@ class ListsViewController: UIViewController, UIGestureRecognizerDelegate {
     @objc
     fileprivate func handleLongPress() {
         if longPressGesture.state == UIGestureRecognizerState.began {
-            
-            // provide feedback that we are entering update mode
-            feedbackGenerator?.notificationOccurred(.success)
-            
-            // present the selected list
-            let list = dataSourceItems[selectedRow]
-            let listInfo = SCGraph.getListInfo(list: list)
-            print("Item: \(listInfo.title), Date: \(listInfo.date))")
-            self.present(ShoppingListViewController(list: list), animated: true, completion: nil)
-            
+            let touchPoint = longPressGesture.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: touchPoint) {
+                
+                // provide feedback that we are entering update mode
+                feedbackGenerator?.notificationOccurred(.success)
+                
+                // present the selected list
+                let list = dataSourceItems[indexPath.row]
+                let listInfo = SCGraph.getListInfo(list: list)
+                print("Item: \(listInfo.title), Date: \(listInfo.date))")
+                self.present(ShoppingListViewController(list: list), animated: true, completion: nil)
+            }
         }
     }
     
@@ -181,9 +183,7 @@ extension ListsViewController: UITableViewDelegate {
      delegate: didSelectRowAtIndexPath
      */
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        selectedRow = indexPath.row
-        
+        selectedRow = (indexPath as NSIndexPath).row
     }
     
     /*
