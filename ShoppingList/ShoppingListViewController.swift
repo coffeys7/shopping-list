@@ -11,12 +11,17 @@ import Material
 import ChameleonFramework
 import Graph
 
-class ShoppingListViewController: UIViewController {
+class ShoppingListViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let tableViewHeight: CGFloat = 80.0
     fileprivate var tableView: UITableView!
     fileprivate var dataSourceItems: Array<Entity>!
     fileprivate var toolbar: Toolbar!
+    
+    var longPressGesture: UILongPressGestureRecognizer!
+    var selectedRow = 0
+    
+    var feedbackGenerator: UINotificationFeedbackGenerator?
     
     var list: Entity!
     
@@ -38,9 +43,12 @@ class ShoppingListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        feedbackGenerator = UINotificationFeedbackGenerator()
+        
         prepareView()
         prepareToolbar()
         prepareTableView()
+        prepareLongPressGesture()
     }
 
     override func didReceiveMemoryWarning() {
@@ -79,6 +87,67 @@ class ShoppingListViewController: UIViewController {
         toolbar.leftViews = [menuButton]
         toolbar.rightViews = [addButton]
     }
+    
+    fileprivate func prepareLongPressGesture() {
+        longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGesture.minimumPressDuration = 0.4
+        longPressGesture.allowableMovement = 15
+        longPressGesture.delegate = self
+        self.tableView.addGestureRecognizer(longPressGesture)
+    }
+    
+    @objc
+    fileprivate func handleLongPress() {
+        if longPressGesture.state == UIGestureRecognizerState.began {
+            
+            // provide feedback that we are entering update mode
+            feedbackGenerator?.notificationOccurred(.success)
+            
+            // currently selected nav item
+            let itemEntity: Entity = dataSourceItems[selectedRow]
+            let itemInfo = SCGraph.getListItemInfo(listItem: itemEntity)
+            
+            print("Label: \(itemInfo.label), SubLabel: \(itemInfo.subLabel), Annotation: \(itemInfo.annotation), done: \(itemInfo.done)")
+            
+            // create new alert from AddItemAlertView template
+            let alert = AddItemAlertView()
+            
+            // add field for label
+            let labelField = alert.addTextField("Item label")
+            labelField.autocapitalizationType = .none
+            labelField.autocorrectionType = .no
+            labelField.text = itemInfo.label
+            
+            // add field for sub label
+            let subLabelField = alert.addTextField("Sub label")
+            subLabelField.autocapitalizationType = .none
+            subLabelField.autocorrectionType = .no
+            subLabelField.text = itemInfo.subLabel
+            
+            // add field for annotation
+            let annotationField = alert.addTextField("Annotation")
+            annotationField.autocapitalizationType = .none
+            annotationField.autocorrectionType = .no
+            annotationField.text = itemInfo.annotation
+            
+            // add button with callback
+            let btn = alert.addButton("Update") {
+                itemEntity["label"] = labelField.text!
+                itemEntity["subLabel"] = subLabelField.text!
+                itemEntity["annotation"] = annotationField.text!
+                SCGraph.update()
+                self.animateUpdates()
+            }
+            btn.backgroundColor = FlatGreen()
+            
+            // add (cancel) button with callback
+            _ = alert.addButton("Cancel", backgroundColor: FlatGray()) {
+                alert.hideView()
+            }
+            alert.showEdit("Update Item", subTitle: "Update attributes below for this item", colorStyle: 0x22B573, animationStyle: .leftToRight)
+        }
+    }
+        
     
     @objc
     fileprivate func handleAddButton() {
@@ -176,50 +245,7 @@ extension ShoppingListViewController: UITableViewDelegate {
      delegate: didSelectRowAtIndexPath
      */
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        // currently selected nav item
-        let itemEntity: Entity = dataSourceItems[(indexPath as NSIndexPath).row]
-        let itemInfo = SCGraph.getListItemInfo(listItem: itemEntity)
-        
-        print("Label: \(itemInfo.label), SubLabel: \(itemInfo.subLabel), Annotation: \(itemInfo.annotation), done: \(itemInfo.done)")
-        
-        // create new alert from AddItemAlertView template
-        let alert = AddItemAlertView()
-        
-        // add field for label
-        let labelField = alert.addTextField("Item label")
-        labelField.autocapitalizationType = .none
-        labelField.autocorrectionType = .no
-        labelField.text = itemInfo.label
-        
-        // add field for sub label
-        let subLabelField = alert.addTextField("Sub label")
-        subLabelField.autocapitalizationType = .none
-        subLabelField.autocorrectionType = .no
-        subLabelField.text = itemInfo.subLabel
-        
-        // add field for annotation
-        let annotationField = alert.addTextField("Annotation")
-        annotationField.autocapitalizationType = .none
-        annotationField.autocorrectionType = .no
-        annotationField.text = itemInfo.annotation
-        
-        // add button with callback
-        let btn = alert.addButton("Update") {
-            itemEntity["label"] = labelField.text!
-            itemEntity["subLabel"] = subLabelField.text!
-            itemEntity["annotation"] = annotationField.text!
-            SCGraph.update()
-            self.animateUpdates()
-        }
-        btn.backgroundColor = FlatGreen()
-        
-        // add (cancel) button with callback
-        _ = alert.addButton("Cancel", backgroundColor: FlatGray()) {
-            alert.hideView()
-        }
-        alert.showEdit("Update Item", subTitle: "Update attributes below for this item", colorStyle: 0x22B573, animationStyle: .leftToRight)
-        
+        selectedRow = indexPath.row
     }
     
     /*

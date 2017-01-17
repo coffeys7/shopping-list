@@ -15,20 +15,27 @@ import SwiftyUserDefaults
 import Graph
 import SCLAlertView
 
-class ListsViewController: UIViewController {
+class ListsViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let tableViewHeight: CGFloat = 80.0
     fileprivate var tableView: UITableView!
     fileprivate var toolbar: Toolbar!
     fileprivate var dataSourceItems: Array<Entity>!
     
+    var selectedRow = 0
+    var longPressGesture: UILongPressGestureRecognizer!
+    var feedbackGenerator: UINotificationFeedbackGenerator?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        feedbackGenerator = UINotificationFeedbackGenerator()
         
         prepareView()
         prepareToolbar()
         prepareCells()
         prepareTableView()
+        prepareLongPressGesture()
     }
     
     override func didReceiveMemoryWarning() {
@@ -38,6 +45,30 @@ class ListsViewController: UIViewController {
     
     fileprivate func prepareView() {
         view.backgroundColor = FlatMintDark()
+    }
+    
+    fileprivate func prepareLongPressGesture() {
+        longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGesture.minimumPressDuration = 0.6
+        longPressGesture.allowableMovement = 15
+        longPressGesture.delegate = self
+        self.tableView.addGestureRecognizer(longPressGesture)
+    }
+    
+    @objc
+    fileprivate func handleLongPress() {
+        if longPressGesture.state == UIGestureRecognizerState.began {
+            
+            // provide feedback that we are entering update mode
+            feedbackGenerator?.notificationOccurred(.success)
+            
+            // present the selected list
+            let list = dataSourceItems[selectedRow]
+            let listInfo = SCGraph.getListInfo(list: list)
+            print("Item: \(listInfo.title), Date: \(listInfo.date))")
+            self.present(ShoppingListViewController(list: list), animated: true, completion: nil)
+            
+        }
     }
     
     fileprivate func prepareToolbar() {
@@ -151,11 +182,8 @@ extension ListsViewController: UITableViewDelegate {
      */
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        // currently selected nav item
-        let list: Entity = dataSourceItems[(indexPath as NSIndexPath).row]
-        let listInfo = SCGraph.getListInfo(list: list)
-        print("Item: \(listInfo.title), Date: \(listInfo.date))")
-        self.present(ShoppingListViewController(list: list), animated: true, completion: nil)
+        selectedRow = indexPath.row
+        
     }
     
     /*
