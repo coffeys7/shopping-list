@@ -64,11 +64,34 @@ class ListsViewController: UIViewController, UIGestureRecognizerDelegate {
                 // provide feedback that we are entering update mode
                 feedbackGenerator?.notificationOccurred(.success)
                 
-                // present the selected list
-                let list = dataSourceItems[indexPath.row]
-                let listInfo = SCGraph.getListInfo(list: list)
-                print("Item: \(listInfo.title), Date: \(listInfo.date))")
-                self.present(ShoppingListViewController(list: list), animated: true, completion: nil)
+                // currently selected nav item
+                let listEntity: Entity = dataSourceItems[indexPath.row]
+                let listInfo = SCGraph.getListInfo(list: listEntity)
+                
+                // create new alert from AddItemAlertView template
+                let alert = AddItemAlertView()
+                
+                // add field for title
+                let titleField = alert.addTextField("Title")
+                titleField.autocapitalizationType = .none
+                titleField.autocorrectionType = .no
+                titleField.text = listInfo.title
+                
+                // add button with callback
+                let btn = alert.addButton("Update") {
+                    listEntity["title"] = titleField.text!
+                    SCGraph.update()
+                    self.animateUpdates()
+                }
+                btn.backgroundColor = FlatGreen()
+                
+                // add (cancel) button with callback
+                _ = alert.addButton("Cancel", backgroundColor: FlatGray()) {
+                    alert.hideView()
+                }
+                alert.showEdit("Update List", subTitle: "Update the title for this list or press cancel to cancel", colorStyle: 0x22B573, animationStyle: .leftToRight)
+                
+                
             }
         }
     }
@@ -108,7 +131,6 @@ class ListsViewController: UIViewController, UIGestureRecognizerDelegate {
         let btn = alert.addButton("Add List") {
             let lbl = txt.text!
             self.addNewList(label: lbl)
-            
         }
         btn.backgroundColor = FlatGreen()
         
@@ -183,7 +205,11 @@ extension ListsViewController: UITableViewDelegate {
      delegate: didSelectRowAtIndexPath
      */
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedRow = (indexPath as NSIndexPath).row
+        // present the selected list
+        let list = dataSourceItems[indexPath.row]
+        let listInfo = SCGraph.getListInfo(list: list)
+        print("Item: \(listInfo.title), Date: \(listInfo.date))")
+        self.present(ShoppingListViewController(list: list), animated: true, completion: nil)
     }
     
     /*
