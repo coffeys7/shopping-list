@@ -2,6 +2,7 @@ PODS:
   - ChameleonFramework/Default (2.1.0)
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
+  - CircleMenu (2.0.1)
   - FontAwesome.swift (1.0.0)
   - Graph (2.1.0)
   - Material (2.4.1):
@@ -14,6 +15,7 @@ PODS:
 
 DEPENDENCIES:
   - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
+  - CircleMenu (~> 2.0.1)
   - FontAwesome.swift
   - Graph (~> 2.0)
   - Material (~> 2.0)
@@ -39,6 +41,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
+  CircleMenu: a964e8b03aae58c84b40d5cf64630b62bef077eb
   FontAwesome.swift: 2d32a3d62195343c2004b7c9043294ed2948553a
   Graph: 2d1b00516566c8a1d3d304b852288c7e68a13c01
   Material: bdf4386e3600537077c2667764292f8dd581e541
@@ -47,6 +50,6 @@ SPEC CHECKSUMS:
   Spring: 3f02b5dc3308572ef177b3cad0fa7bbc4b0706f7
   SwiftyUserDefaults: 0f1d45fc3aafb9064dac661e367f8f83fe21a4b4
 
-PODFILE CHECKSUM: 6bf2149a0648cff1447a8ee359590449e8b8c264
+PODFILE CHECKSUM: e3c509e51f18940b34c86253291ed47907aa0165
 
 COCOAPODS: 1.0.1

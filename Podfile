@@ -13,6 +13,7 @@ target 'ShoppingList' do
   pod 'SwiftyUserDefaults'
   pod 'Graph', '~> 2.0'
   pod 'SCLAlertView'
+  pod 'CircleMenu', '~> 2.0.1'
 
 end
 
