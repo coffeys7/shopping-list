@@ -37,6 +37,8 @@ class ItemTableViewCell: TableViewCell {
         self.prepareItemLabel()
         self.prepareSubLabel()
         self.prepareAnnotationLabel()
+        self.cornerRadius = (0.1) * self.height
+        self.depth = DepthPresetToValue(preset: .depth4)
         setDone(done: item["done"] as! Bool)
     }
         

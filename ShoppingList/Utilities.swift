@@ -124,10 +124,10 @@ struct ColorScheme {
 
 struct CellColorScheme {
     static func done() -> ColorScheme {
-        return ColorScheme(text: FlatWhite().withAlphaComponent(0.5), background: FlatBlack().withAlphaComponent(0.3))
+        return ColorScheme(text: FlatWhite().withAlphaComponent(0.5), background: FlatGrayDark().withAlphaComponent(0.2))
     }
     static func notDone() -> ColorScheme {
-        return ColorScheme(text: FlatWhite().withAlphaComponent(1.0), background: UIColor.clear)
+        return ColorScheme(text: FlatWhite().withAlphaComponent(1.0), background: FlatBlue().withAlphaComponent(0.9))
     }
 }
 
