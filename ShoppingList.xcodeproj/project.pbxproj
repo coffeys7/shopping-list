@@ -141,7 +141,7 @@
 				TargetAttributes = {
 					B06A57671E273A8700E6310F = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 9EVM683RYN;
+						DevelopmentTeam = HLUAZ8V553;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -359,7 +359,7 @@
 			baseConfigurationReference = 93349D4FFD22BD2235821DBD /* Pods-ShoppingList.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 9EVM683RYN;
+				DEVELOPMENT_TEAM = HLUAZ8V553;
 				INFOPLIST_FILE = ShoppingList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.coffey.ShoppingList;
@@ -374,7 +374,7 @@
 			baseConfigurationReference = C517A2E05E8182B941EAC62E /* Pods-ShoppingList.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 9EVM683RYN;
+				DEVELOPMENT_TEAM = HLUAZ8V553;
 				INFOPLIST_FILE = ShoppingList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.coffey.ShoppingList;
