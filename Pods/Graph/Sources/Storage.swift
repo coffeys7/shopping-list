@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 - 2016, Daniel Dahan and CosmicMind, Inc. <http://cosmicmind.com>.
+ * Copyright (C) 2015 - 2017, Daniel Dahan and CosmicMind, Inc. <http://cosmicmind.com>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@ internal func GraphCompletionCallback(success: Bool, error: Error?, completion: 
  - Parameter message: The message to pass.
  - Returns: An Error object.
  */
-internal func GraphError(message: String, domain: String = "io.cosmicmind.graph") -> Error? {
+internal func GraphError(message: String, domain: String = "com.cosmicmind.graph") -> Error? {
     var info = [String: Any]()
     info[NSLocalizedDescriptionKey] = message
     info[NSLocalizedFailureReasonErrorKey] = message

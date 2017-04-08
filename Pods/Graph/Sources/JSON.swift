@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 - 2016, Daniel Dahan and CosmicMind, Inc. <http://cosmicmind.com>.
+ * Copyright (C) 2015 - 2017, Daniel Dahan and CosmicMind, Inc. <http://cosmicmind.com>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -125,7 +125,7 @@ open class JSON: Equatable, CustomStringConvertible {
         if let o = object as? JSON {
             return stringify(object: o.object)
         } else if let data = JSON.serialize(object: object) {
-            if let o = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as? String {
+            if let o = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String? {
                 return o
             }
         }

@@ -3,12 +3,12 @@ PODS:
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
   - CircleMenu (2.0.1)
-  - FontAwesome.swift (1.0.0)
-  - Graph (2.1.0)
-  - Material (2.4.1):
-    - Material/Core (= 2.4.1)
-  - Material/Core (2.4.1)
-  - NVActivityIndicatorView (3.1)
+  - FontAwesome.swift (1.1.1)
+  - Graph (2.1.4)
+  - Material (2.6.3):
+    - Material/Core (= 2.6.3)
+  - Material/Core (2.6.3)
+  - NVActivityIndicatorView (3.6.0)
   - SCLAlertView (0.7.0)
   - Spring (1.0.3)
   - SwiftyUserDefaults (3.0.0)
@@ -33,23 +33,23 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   ChameleonFramework:
-    :commit: dcf98f9bf3a632a7f40679b7da46f09681e48526
+    :commit: acc480fbe023c6e5fe40f68593f4a70a8c4c7ad5
     :git: https://github.com/ViccAlexander/Chameleon.git
   Spring:
-    :commit: 3a9227c6e9157e7b47f5ac1ee5abab2a56b50002
+    :commit: 8201b5c93bd7ebdf4cd18160bcde1e6e88c2be64
     :git: https://github.com/MengTo/Spring.git
 
 SPEC CHECKSUMS:
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   CircleMenu: a964e8b03aae58c84b40d5cf64630b62bef077eb
-  FontAwesome.swift: 2d32a3d62195343c2004b7c9043294ed2948553a
-  Graph: 2d1b00516566c8a1d3d304b852288c7e68a13c01
-  Material: bdf4386e3600537077c2667764292f8dd581e541
-  NVActivityIndicatorView: 9f47e8a4affb860ef729aeec99b1550219e6c233
+  FontAwesome.swift: f4ff5a9199dc3b510eba5bb377e834f159aef358
+  Graph: 0f3a549c8597e6ab25a58c4a8f7276555ec5ba4d
+  Material: af607a7ec0e9978ef85cf189a3d8ceeeb650400f
+  NVActivityIndicatorView: c7c1c4300b418bd9ed06459e78d4df859ddbe31f
   SCLAlertView: 8a14ffc40590c619e183eed2298b854385f30be1
   Spring: 3f02b5dc3308572ef177b3cad0fa7bbc4b0706f7
   SwiftyUserDefaults: 0f1d45fc3aafb9064dac661e367f8f83fe21a4b4
 
 PODFILE CHECKSUM: e3c509e51f18940b34c86253291ed47907aa0165
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.2.1.rc.1

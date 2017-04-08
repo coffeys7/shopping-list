@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 - 2016, Daniel Dahan and CosmicMind, Inc. <http://cosmicmind.com>.
+ * Copyright (C) 2015 - 2017, Daniel Dahan and CosmicMind, Inc. <http://cosmicmind.com>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,45 +30,26 @@
 
 import UIKit
 
-@objc(AnimationRotationMode)
-public enum AnimationRotationMode: Int {
-	case `default`
-	case auto
-	case autoReverse
-}
-
-/**
- Converts an AnimationRotationMode to a corresponding CAAnimationRotate key.
- - Parameter mode: An AnimationRotationMode.
- - Returns: An optional CAAnimationRotate key String.
- */
-public func AnimationRotationModeToValue(mode: AnimationRotationMode) -> String? {
-	switch mode {
-    case .default:
-        return nil
-    case .auto:
-		return kCAAnimationRotateAuto
-	case .autoReverse:
-		return kCAAnimationRotateAutoReverse
-	}
-}
-
-extension Motion {
+public struct DataSourceItem {
+	/// Stores an the data for the item.
+	public var data: Any?
+	
+	/// Width for horizontal scroll direction.
+	public var width: CGFloat?
+	
+	/// Height for vertical scroll direction.
+	public var height: CGFloat?
+	
 	/**
-     Creates a CAKeyframeAnimation.
-     - Parameter bezierPath: A UIBezierPath.
-     - Parameter mode: An AnimationRotationMode.
-     - Parameter duration: An animation duration time.
-     - Returns: A CAKeyframeAnimation.
+     Initializer.
+     - Parameter data: A reference to an Any that is associated
+     with a width or height.
+     - Parameter width: The width for the horizontal scroll direction.
+     - Parameter height: The height for the vertical scroll direction.
      */
-	public static func path(bezierPath: UIBezierPath, mode: AnimationRotationMode = .auto, duration: CFTimeInterval? = nil) -> CAKeyframeAnimation {
-		let animation = CAKeyframeAnimation()
-		animation.keyPath = AnimationKeyPath.position.rawValue
-		animation.path = bezierPath.cgPath
-        animation.rotationMode = AnimationRotationModeToValue(mode: mode)
-		if let v = duration {
-			animation.duration = v
-		}
-		return animation
+	public init(data: Any? = nil, width: CGFloat? = nil, height: CGFloat? = nil) {
+		self.data = data
+		self.width = width
+		self.height = height
 	}
 }

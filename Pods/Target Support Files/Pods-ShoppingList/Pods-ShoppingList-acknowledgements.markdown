@@ -77,7 +77,7 @@ THE SOFTWARE.
 
 ## Graph
 
-Copyright (C) 2015 - 2016, CosmicMind, Inc. <http://cosmicmind.com>. All rights reserved.
+Copyright (C) 2015 - 2017, CosmicMind, Inc. <http://cosmicmind.com>. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -97,7 +97,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ## Material
 
-Copyright (C) 2015 - 2016, Daniel Dahan and CosmicMind, Inc. <http://cosmicmind.com>. All rights reserved.
+Copyright (C) 2015 - 2017, Daniel Dahan and CosmicMind, Inc. <http://cosmicmind.com>. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -119,7 +119,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 The MIT License (MIT)
 
-Copyright (c) 2016 Nguyen Vinh
+Copyright (c) 2016 Vinh Nguyen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
