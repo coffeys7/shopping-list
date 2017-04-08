@@ -21,6 +21,10 @@ public enum SCInterval {
     case year
 }
 
+/**
+ * name: AddItemAlertView
+ *
+ */
 public func AddItemAlertView() -> SCLAlertView {
     let appearance = SCLAlertView.SCLAppearance.init(
         kWindowWidth: Screen.width - 40,

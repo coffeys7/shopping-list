@@ -296,7 +296,7 @@ extension ShoppingListViewController {
                 feedbackGenerator?.notificationOccurred(.success)
                 
                 // currently selected nav item
-                let itemEntity: Entity = dataSourceItems[indexPath.row]
+                let itemEntity: Entity = dataSourceItems[indexPath.section]
                 let itemInfo = SCGraph.getListItemInfo(listItem: itemEntity)
                 
                 print("Label: \(itemInfo.label), SubLabel: \(itemInfo.subLabel), Annotation: \(itemInfo.annotation), done: \(itemInfo.done)")

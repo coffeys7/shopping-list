@@ -25,7 +25,10 @@ class ListsViewController: UIViewController, UIGestureRecognizerDelegate {
     var selectedRow = 0
     var longPressGesture: UILongPressGestureRecognizer!
     var feedbackGenerator: UINotificationFeedbackGenerator?
-    
+
+    /**
+     * name: viewDidLoad
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         
